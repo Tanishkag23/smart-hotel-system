@@ -28,13 +28,16 @@ class RoomResponse(RoomCreate):
 
 
 class BookingCreate(BaseModel):
-    customer_id: int
     room_id: int
     check_in: date
     check_out: date
 
-class BookingResponse(BookingCreate):
+class BookingResponse(BaseModel):
     id: int
+    customer_id: int
+    room_id: int
+    check_in: date
+    check_out: date
     predicted_price: Optional[float] = None
     cancellation_risk: Optional[float] = None
     status: str

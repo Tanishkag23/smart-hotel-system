@@ -7,8 +7,10 @@ class Customer(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
-    email = Column(String, unique=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
     phone = Column(String)
+    hashed_password = Column(String, nullable=False)
+    role = Column(String, default="customer")  # "customer" | "admin" | "staff"
 
     bookings = relationship("Booking", back_populates="customer")
 
