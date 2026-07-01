@@ -1,10 +1,14 @@
 from fastapi import FastAPI
 from app.database import engine, Base
+from app.routers import customers, rooms, bookings
 
 app = FastAPI(title="Smart Hotel Management System")
 
-# Yeh line database tables create kar degi agar already nahi bani
 Base.metadata.create_all(bind=engine)
+
+app.include_router(customers.router)
+app.include_router(rooms.router)
+app.include_router(bookings.router)
 
 @app.get("/")
 def root():
