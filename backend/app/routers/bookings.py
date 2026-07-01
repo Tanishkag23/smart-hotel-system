@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.database_models import Booking, Customer, Room
 from app.schemas import BookingCreate, BookingResponse
+from app.ml.predictor import predict_booking
 
 router = APIRouter(
     prefix="/bookings",
@@ -22,15 +23,21 @@ def create_booking(booking: BookingCreate, db: Session = Depends(get_db)):
     if not room:
         raise HTTPException(status_code=404, detail="Room not found")
 
-    # Abhi ke liye simple price = room ka base_price
-    # (Yeh wahi jagah hai jaha aage ML model plug hoga)
+    # ML models se price aur cancellation risk predict karo
+    ml_result = predict_booking(
+        room_type=room.room_type,
+        check_in=booking.check_in,
+        check_out=booking.check_out,
+        num_guests=getattr(booking, "num_guests", 1),
+    )
+
     db_booking = Booking(
         customer_id=booking.customer_id,
         room_id=booking.room_id,
         check_in=booking.check_in,
         check_out=booking.check_out,
-        predicted_price=room.base_price,   # abhi placeholder, baad mein ML se aayega
-        cancellation_risk=0.0,             # abhi placeholder, baad mein ML se aayega
+        predicted_price=ml_result["predicted_price_inr"],
+        cancellation_risk=ml_result["cancellation_risk"],
         status="confirmed"
     )
     db.add(db_booking)
