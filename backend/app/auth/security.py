@@ -1,8 +1,12 @@
+import os
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
 from jose import jwt, JWTError
+from dotenv import load_dotenv
 
-SECRET_KEY = "CHANGE_THIS_TO_A_RANDOM_LONG_SECRET_STRING"
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback-dev-secret-change-me")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 
