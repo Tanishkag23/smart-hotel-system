@@ -7,7 +7,10 @@ app = FastAPI(title="Smart Hotel Management System")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # frontend ka URL
+    allow_origins=[
+        "http://localhost:5173",                     # local dev
+        "https://smart-hotel-system.vercel.app",      # production frontend (update if Vercel gives a different URL)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
